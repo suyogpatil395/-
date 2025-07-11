@@ -1,0 +1,186 @@
+{
+  "name": "Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Request a Service",
+        "formDescription": "=Please fill the form, we'll contact you.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Email Address",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Date",
+              "fieldType": "date",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8548a3b6-9fad-43ed-99ac-bc2a61ca61a6",
+      "name": "On form submission",
+      "webhookId": "8b626406-8ed9-4f1a-988a-ab9b1624ce6f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4e188648-ab56-4798-ace7-d9bb214b296d",
+              "leftValue": "={{ $json.Date.toDateTime() }}",
+              "rightValue": "={{ $now.plus(7, 'days') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "349ff406-92e2-4e14-b1b0-73d1f65cfd18",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        440,
+        100
+      ],
+      "id": "bd8c0c32-2359-439f-a553-03cb9978e65a",
+      "name": "todo"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "D094W40SGG7",
+          "mode": "id"
+        },
+        "text": "={{ $json['Email Address'] }}\n{{ $json.Name }}\n{{ $json.Date }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        440,
+        -100
+      ],
+      "id": "eaa358c1-ac95-42ce-9fc2-d688fd62833f",
+      "name": "Slack",
+      "webhookId": "3bf726cc-a075-4633-a303-680e76e57b8a",
+      "credentials": {
+        "slackApi": {
+          "id": "zPsspmUQ4yCq8Bnh",
+          "name": "Slack account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "BiNmumZotC",
+        "text": "={{ $json['Email Address'] }}\n{{ $json.Name }}\n{{ $json.Date }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        660,
+        100
+      ],
+      "id": "a2014a48-1bb8-4f27-b28a-dd5dad5fc06f",
+      "name": "LinkedIn",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "L8k2m06PP72a3s7X",
+          "name": "LinkedIn account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "todo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "todo": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9bbd1ba3-5476-4d00-8797-e93db1b3bb3b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5e5cd8bad4759013ccf0bf1e701f1050ca6f581d1cd36ada5660fba94a48e129"
+  },
+  "id": "pClZvk3QwO3JFPqo",
+  "tags": []
+}
